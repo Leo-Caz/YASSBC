@@ -6,7 +6,7 @@ public class Character_script : MonoBehaviour {
 
 	private Rigidbody2D rb;  // rb is used to enable and control the physics of the character.
 
-	public float runSpeed = 0f;  // Runspeed is set to 0 in the script, but will be set in the Editor.
+	public float runSpeed = 8.5f;  // Movement speed when running (not the initial dash)
 	private float horizontalMove = 0f;	 // How far analog stick is pressed on horizontal axis (between -1 and +1).
 
 	// Use this for initialization
