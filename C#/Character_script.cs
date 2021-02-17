@@ -8,7 +8,7 @@ public class Character_script : MonoBehaviour {
 
 	public float runSpeed = 8.5f;  // Movement speed when running (not the initial dash)
 	public float walkSpeed = 3.5f;  // Movement speed when walking.
-	public float jumpHeight = 0f;  // Height of the peak of the jump.
+	public float jumpHeight = 13.5f;  // Height of the peak of the jump.
 	private float horizontalMove = 0f;	 // How far analog stick is pressed on horizontal axis (between -1 and +1).
 	private bool smashMode = false;  // Determines if the normal attack button will do smashs or tilt attacks,
 									 // and if theplayer will walk or run.
@@ -36,6 +36,7 @@ public class Character_script : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown(KeyCode.Space)) {
+			rb.velocity = new Vector2(rb.velocity.x, 0f);
 			rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
 		}
 	}
