@@ -14,7 +14,7 @@ public class Character_script : MonoBehaviour {
 	private float horizontalMove = 0f;	 // How far analog stick is pressed on horizontal axis (between -1 and +1).
 	private bool smashMode = false;  // Determines if normal atk button will do smashs or tilts, and if player will walk or run.
 	
-	private bool test = false;
+	private bool ableToDash = true;
 
 	// Use this for initialization
 	void Awake () {
@@ -26,7 +26,7 @@ public class Character_script : MonoBehaviour {
 		horizontalMove = Input.GetAxisRaw("Horizontal");
 
 		if (horizontalMove >= -0.1f && horizontalMove <= 0.1f) {
-			test = false;
+			ableToDash = true;
 		}
 
 		if (Input.GetKeyDown(KeyCode.A)) {
@@ -41,10 +41,10 @@ public class Character_script : MonoBehaviour {
 				rb.velocity = new Vector2(horizontalMove * walkSpeed, rb.velocity.y);
 			}
 			else {
-				if (!test) {
+				if (ableToDash) {
 					rb.AddForce(new Vector2(dashSpeed * horizontalMove, rb.velocity.y), ForceMode2D.Impulse);
 					Debug.Log(rb.velocity.x);
-					test = true;
+					ableToDash = false;
 				}
 				else {
 					float x =  Mathf.Clamp(Abs(rb.velocity.x), runSpeed, dashSpeed);
