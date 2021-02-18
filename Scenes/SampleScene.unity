@@ -145,7 +145,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 8.5
   walkSpeed: 4
-  jumpHeight: 13.5
+  jumpHeight: 25
+  maxFallSpeed: -8.5
 --- !u!61 &413601823
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -183,9 +184,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 2.6
   m_AngularDrag: 0.05
-  m_GravityScale: 2.6
+  m_GravityScale: 4.3
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -376,8 +377,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1798716455}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.061, y: -4.621, z: -0.016964808}
-  m_LocalScale: {x: 2.156258, y: 1.323408, z: 1}
+  m_LocalPosition: {x: -0.06, y: -3.35, z: -0.016964808}
+  m_LocalScale: {x: 1.8370892, y: 1.323408, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
