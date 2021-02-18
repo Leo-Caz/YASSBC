@@ -6,7 +6,7 @@ public class Character_script : MonoBehaviour {
 
 	private Rigidbody2D rb;  // rb is used to enable and control the physics of the character.
 
-	public float dashSpeed = 0f;    // Speed of the initial dash.
+	public float dashSpeed = 14f;   // Speed of the initial dash.
 	public float runSpeed  = 8.5f;  // Movement speed when running (not the initial dash)
 	public float walkSpeed = 3.5f;  // Maximum movement speed when walking.
 	public float jumpHeight = 25f;  // Height of the peak of the jump.
@@ -29,11 +29,6 @@ public class Character_script : MonoBehaviour {
 			test = false;
 		}
 
-		/* if ((horizontalMove >= 0.1f && rb.velocity.x <= 0.1) || */
-		/* 		(horizontalMove <= -0.1f && rb.velocity.x >= -0.1f)) { */
-		/* 	test = false; */
-		/* } */
-
 		if (Input.GetKeyDown(KeyCode.A)) {
 			smashMode = true;
 		}
@@ -52,9 +47,9 @@ public class Character_script : MonoBehaviour {
 					test = true;
 				}
 				else {
-					/* rb.velocity = new Vector2(horizontalMove * runSpeed, rb.velocity.y); */
 					float x =  Mathf.Clamp(Abs(rb.velocity.x), runSpeed, dashSpeed);
 					rb.velocity = new Vector2(x * horizontalMove, rb.velocity.y);
+					Debug.Log(rb.velocity.x);
 				}
 			}
 		}
