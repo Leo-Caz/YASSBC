@@ -42,7 +42,7 @@ public class Character_script : MonoBehaviour {
 			}
 			else {
 				if (ableToDash) {
-					rb.AddForce(new Vector2(dashSpeed * horizontalMove, rb.velocity.y), ForceMode2D.Impulse);
+					rb.AddForce(new Vector2(dashSpeed * horizontalMove, 0f), ForceMode2D.Impulse);
 					Debug.Log(rb.velocity.x);
 					ableToDash = false;
 				}
