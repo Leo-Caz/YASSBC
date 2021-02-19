@@ -18,6 +18,8 @@ public class Character_script : MonoBehaviour {
 	public float airSpeed = 7.75f;        // Maximum speed in the air.
 	public bool isGrounded = false;       // Determines if the player is touching the ground.
 
+	public bool insidePlateform = false;  // Determines if the player is inside a platform when going through.
+
 	private float horizontalMove = 0f;	  // Position of the analog stick x-axis (between -1 and +1).
 	private bool ableToDash = true;       // Determines if the player does the initial dash when running.
 	private bool smashMode = false;       // Determines if normal atk button will do smashs or tilts, and if player will walk or run.
@@ -43,6 +45,12 @@ public class Character_script : MonoBehaviour {
 			if (isGrounded && !smashMode) Jump(0);      // Perform a standard jump.
 			else if (isGrounded && smashMode) Jump(1);  // Perform a short jump.
 			else if (!isGrounded) Jump(2);              // Perform a double jump.
+		}
+
+		if (Input.GetKeyDown(KeyCode.C)) Physics2D.IgnoreLayerCollision(10, 9);
+		/* else if (Input.GetKeyUp(KeyCode.C) && !insidePlateform) { */
+		else if (!insidePlateform) {
+			Physics2D.IgnoreLayerCollision(10, 9, false);
 		}
 	}
 
