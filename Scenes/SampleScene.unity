@@ -148,9 +148,10 @@ MonoBehaviour:
   walkSpeed: 4.5
   fullHopHeight: 25
   shortHopHeight: 18
-  doubleJumpHeight: 27
+  doubleJumpHeight: 23
   maxNbJumps: 2
   maxFallSpeed: -8.5
+  fastFallSpeed: -14.5
   airAccel: 14.5
   airSpeed: 7.75
   isGrounded: 0
@@ -582,7 +583,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.03, y: 4.843049}
+  m_Size: {x: 3.03, y: 4.8}
   m_EdgeRadius: 0
 --- !u!1 &1798716455
 GameObject:
