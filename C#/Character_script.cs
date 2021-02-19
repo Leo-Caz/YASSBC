@@ -11,6 +11,9 @@ public class Character_script : MonoBehaviour {
 	public float walkSpeed = 3.5f;  // Maximum movement speed when walking.
 	public float jumpHeight = 25f;  // Height of the peak of the jump.
 	public float maxFallSpeed = -8.5f;  // Maximum fall speed without fast falling.
+	public int maxNbJumps = 2;      // Number of times the player can jump before touching the ground.
+
+	private int jumpsUsed = 0;      // Number of jumps performed before touching the ground.
 	private float horizontalMove = 0f;	 // How far analog stick is pressed on horizontal axis (between -1 and +1).
 	private bool smashMode = false;  // Determines if normal atk button will do smashs or tilts, and if player will walk or run.
 	
@@ -25,6 +28,10 @@ public class Character_script : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		horizontalMove = Input.GetAxisRaw("Horizontal");
+
+		if (isGrounded) {
+			jumpsUsed = 0;
+		}
 
 		if (Input.GetKeyDown(KeyCode.A)) {
 			smashMode = true;
@@ -50,8 +57,12 @@ public class Character_script : MonoBehaviour {
 		}
 		
 		if (Input.GetKeyDown(KeyCode.Space)) {
-			rb.velocity = new Vector2(rb.velocity.x, 0f);
-			rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
+			if (jumpsUsed < maxNbJumps) {
+				jumpsUsed++;
+				isGrounded = false;
+				rb.velocity = new Vector2(rb.velocity.x, 0f);
+				rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
+			}
 		}
 
 		if (rb.velocity.y < 0) {
