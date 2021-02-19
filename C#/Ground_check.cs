@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class Ground_check : MonoBehaviour {
 
-	public bool isGrounded = true;
+	public GameObject character;
+	private Character_script character_script;
 
-	void OnTriggerEnter2D(Collider2D collider) {
-	    Debug.Log("Entered");
+	void Awake() {
+		character_script = character.GetComponent<Character_script>();
+	}
+
+	void OnTriggerEnter2D (Collider2D collider) {
 	    if (collider.gameObject.CompareTag("Ground")) {
-	        isGrounded = true;
+			character_script.isGrounded = true;
 	    }
 	}
 
-	void OnTriggerExit2D(Collider2D collider) {
-	    Debug.Log("Exited");
+	void OnTriggerExit2D (Collider2D collider) {
 	    if (collider.gameObject.CompareTag("Ground")) {
-	        isGrounded = false;
+			character_script.isGrounded = false;
 	    }
 	}
 }

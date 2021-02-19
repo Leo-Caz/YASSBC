@@ -14,6 +14,7 @@ public class Character_script : MonoBehaviour {
 	private float horizontalMove = 0f;	 // How far analog stick is pressed on horizontal axis (between -1 and +1).
 	private bool smashMode = false;  // Determines if normal atk button will do smashs or tilts, and if player will walk or run.
 	
+	public bool isGrounded = false;
 	private bool ableToDash = true;
 
 	// Use this for initialization
@@ -24,10 +25,6 @@ public class Character_script : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		horizontalMove = Input.GetAxisRaw("Horizontal");
-
-		if (horizontalMove >= -0.1f && horizontalMove <= 0.1f) {
-			ableToDash = true;
-		}
 
 		if (Input.GetKeyDown(KeyCode.A)) {
 			smashMode = true;
@@ -43,13 +40,11 @@ public class Character_script : MonoBehaviour {
 			else {
 				if (ableToDash) {
 					rb.AddForce(new Vector2(dashSpeed * horizontalMove, 0f), ForceMode2D.Impulse);
-					Debug.Log(rb.velocity.x);
 					ableToDash = false;
 				}
 				else {
 					float x =  Mathf.Clamp(Abs(rb.velocity.x), runSpeed, dashSpeed);
 					rb.velocity = new Vector2(x * horizontalMove, rb.velocity.y);
-					Debug.Log(rb.velocity.x);
 				}
 			}
 		}
@@ -64,6 +59,20 @@ public class Character_script : MonoBehaviour {
 			rb.velocity = new Vector2(rb.velocity.x, y);
 		}
 	}
+
+	/* void OnCollisionEnter2D (Collision2D collision) { */
+	/* 	if (collision.gameObject.CompareTag("Ground") && rb.velocity.y <= 0.01f) { */
+	/* 		Debug.Log("uuu"); */
+	/* 		isGrounded = true; */
+	/* 	} */
+	/* } */
+
+	/* void OnCollisionExit2D (Collision2D collision) { */
+	/* 	Debug.Log("iii"); */
+	/* 	if (collision.gameObject.CompareTag("Ground")) { */
+	/* 		isGrounded = false; */
+	/* 	} */
+	/* } */
 
 	float Abs (float num) {
 		if (num < 0) num = -num;
