@@ -6,12 +6,14 @@ public class Character_script : MonoBehaviour {
 
 	private Rigidbody2D rb;  // rb is used to enable and control the physics of the character.
 
-	public float dashSpeed = 14f;   // Speed of the initial dash.
-	public float runSpeed  = 8.5f;  // Movement speed when running (not the initial dash)
-	public float walkSpeed = 3.5f;  // Maximum movement speed when walking.
+	public float dashSpeed = 16f;   // Speed of the initial dash.
+	public float runSpeed  = 9.5f;  // Movement speed when running (not the initial dash)
+	public float walkSpeed = 4.5f;  // Maximum movement speed when walking.
 	public float jumpHeight = 25f;  // Height of the peak of the jump.
 	public float maxFallSpeed = -8.5f;  // Maximum fall speed without fast falling.
 	public int maxNbJumps = 2;      // Number of times the player can jump before touching the ground.
+	public float airAccel = 14.5f;
+	public float airSpeed = 7.75f;
 
 	private int jumpsUsed = 0;      // Number of jumps performed before touching the ground.
 	private float horizontalMove = 0f;	 // How far analog stick is pressed on horizontal axis (between -1 and +1).
@@ -36,23 +38,28 @@ public class Character_script : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (isGrounded) {
-			jumpsUsed = 0;
-		}
+		if (isGrounded) jumpsUsed = 0;
 
 		if (horizontalMove != 0) {
-			if (smashMode) {
-				rb.velocity = new Vector2(horizontalMove * walkSpeed, rb.velocity.y);
-			}
-			else {
-				if (ableToDash) {
-					rb.AddForce(new Vector2(dashSpeed * horizontalMove, 0f), ForceMode2D.Impulse);
-					ableToDash = false;
+			if (isGrounded) {
+				if (smashMode) {
+					rb.velocity = new Vector2(horizontalMove * walkSpeed, rb.velocity.y);
 				}
 				else {
-					float x =  Mathf.Clamp(Abs(rb.velocity.x), runSpeed, dashSpeed);
-					rb.velocity = new Vector2(x * horizontalMove, rb.velocity.y);
+					if (ableToDash) {
+						rb.AddForce (new Vector2(dashSpeed * horizontalMove, 0f), ForceMode2D.Impulse);
+						ableToDash = false;
+					}
+					else {
+						float x =  Mathf.Clamp(Abs(rb.velocity.x), runSpeed, dashSpeed);
+						rb.velocity = new Vector2(x * horizontalMove, rb.velocity.y);
+					}
 				}
+			}
+			else {
+				rb.AddForce (new Vector2(horizontalMove * airAccel, rb.velocity.y), ForceMode2D.Force);
+				float x = Mathf.Clamp(rb.velocity.x, -airSpeed, airSpeed);
+				rb.velocity = new Vector2(x, rb.velocity.y);
 			}
 		}
 		

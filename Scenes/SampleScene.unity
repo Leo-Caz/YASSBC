@@ -143,11 +143,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87e46b959587f4d2faa29a5c7e5bf99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashSpeed: 14
-  runSpeed: 8.5
-  walkSpeed: 4
+  dashSpeed: 16
+  runSpeed: 9.5
+  walkSpeed: 4.5
   jumpHeight: 25
   maxFallSpeed: -8.5
+  maxNbJumps: 2
+  airAccel: 14.5
+  airSpeed: 7.75
   isGrounded: 0
 --- !u!61 &413601823
 BoxCollider2D:
