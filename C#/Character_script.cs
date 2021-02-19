@@ -29,15 +29,15 @@ public class Character_script : MonoBehaviour {
 	void Update () {
 		horizontalMove = Input.GetAxisRaw("Horizontal");
 
+		if (Input.GetKeyDown(KeyCode.A)) smashMode = true;
+		else if (Input.GetKeyUp(KeyCode.A)) smashMode = false;
+
+		if ((Input.GetKeyDown(KeyCode.Space)) && (jumpsUsed < maxNbJumps)) Jump();
+	}
+
+	void FixedUpdate() {
 		if (isGrounded) {
 			jumpsUsed = 0;
-		}
-
-		if (Input.GetKeyDown(KeyCode.A)) {
-			smashMode = true;
-		}
-		else if (Input.GetKeyUp(KeyCode.A)) {
-			smashMode = false;
 		}
 
 		if (horizontalMove != 0) {
@@ -56,34 +56,18 @@ public class Character_script : MonoBehaviour {
 			}
 		}
 		
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			if (jumpsUsed < maxNbJumps) {
-				jumpsUsed++;
-				isGrounded = false;
-				rb.velocity = new Vector2(rb.velocity.x, 0f);
-				rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
-			}
-		}
-
 		if (rb.velocity.y < 0) {
 			float y =  Mathf.Clamp(rb.velocity.y, maxFallSpeed, 0f);
 			rb.velocity = new Vector2(rb.velocity.x, y);
 		}
 	}
 
-	/* void OnCollisionEnter2D (Collision2D collision) { */
-	/* 	if (collision.gameObject.CompareTag("Ground") && rb.velocity.y <= 0.01f) { */
-	/* 		Debug.Log("uuu"); */
-	/* 		isGrounded = true; */
-	/* 	} */
-	/* } */
-
-	/* void OnCollisionExit2D (Collision2D collision) { */
-	/* 	Debug.Log("iii"); */
-	/* 	if (collision.gameObject.CompareTag("Ground")) { */
-	/* 		isGrounded = false; */
-	/* 	} */
-	/* } */
+	void Jump() {
+		jumpsUsed++;
+		isGrounded = false;
+		rb.velocity = new Vector2(rb.velocity.x, 0f);
+		rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
+	}
 
 	float Abs (float num) {
 		if (num < 0) num = -num;
