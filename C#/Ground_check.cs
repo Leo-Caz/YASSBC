@@ -14,13 +14,13 @@ public class Ground_check : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D (Collider2D collider) {
-	    if (collider.gameObject.CompareTag("Ground") && rb.velocity.y < 0) {
+	    if ((collider.gameObject.CompareTag("Ground") || collider.gameObject.CompareTag("Plateform")) && rb.velocity.y < 0.1f) {
 			character_script.isGrounded = true;
 	    }
 	}
 
 	void OnTriggerExit2D (Collider2D collider) {
-	    if (collider.gameObject.CompareTag("Ground")) {
+	    if (collider.gameObject.CompareTag("Ground") || collider.gameObject.CompareTag("Plateform")) {
 			character_script.isGrounded = false;
 	    }
 	}
