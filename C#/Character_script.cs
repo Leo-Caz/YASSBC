@@ -11,19 +11,21 @@ public class Character_script : MonoBehaviour {
 	public float walkSpeed = 4.5f;        // Maximum movement speed when walking.
 	public float fullHopHeight = 25f;     // Height of the normal jump.
 	public float shortHopHeight = 18f;    // Height of the short jump.
-	public float doubleJumpHeight = 27f;  // Height of the double jump.
+	public float doubleJumpHeight = 23f;  // Height of the double jump.
 	public int maxNbJumps = 2;            // Number of times the player can jump before touching the ground.
 	public float maxFallSpeed = -8.5f;    // Maximum fall speed without fast falling.
+	public float fastFallSpeed = -14.5f;  // Speed of the player when performing a fast-fall.
 	public float airAccel = 14.5f;        // Acceleration when moving in the air.
 	public float airSpeed = 7.75f;        // Maximum speed in the air.
-	public bool isGrounded = false;       // Determines if the player is touching the ground.
 
+	public bool isGrounded = false;       // Determines if the player is touching the ground.
 	public bool insidePlateform = false;  // Determines if the player is inside a platform when going through.
 
 	private float horizontalMove = 0f;	  // Position of the analog stick x-axis (between -1 and +1).
 	private bool ableToDash = true;       // Determines if the player does the initial dash when running.
 	private bool smashMode = false;       // Determines if normal atk button will do smashs or tilts, and if player will walk or run.
 	private int jumpsUsed = 0;            // Number of jumps performed before touching the ground.
+	private bool isFastFalling = false;   // Determines if the player performes a fast-fall or not.
 
 
 	// Use this for initialization
@@ -47,16 +49,20 @@ public class Character_script : MonoBehaviour {
 			else if (!isGrounded) Jump(2);              // Perform a double jump.
 		}
 
-		if (Input.GetKeyDown(KeyCode.C)) Physics2D.IgnoreLayerCollision(10, 9);
-		/* else if (Input.GetKeyUp(KeyCode.C) && !insidePlateform) { */
+		if (Input.GetKeyDown(KeyCode.C)) Physics2D.IgnoreLayerCollision(10, 9);  // Go through platforms.
 		else if (!insidePlateform) {
-			Physics2D.IgnoreLayerCollision(10, 9, false);
+			Physics2D.IgnoreLayerCollision(10, 9, false);  // Reactivate collisions when out of platform.
 		}
+		
+		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.C)) isFastFalling = true;  // Perform a fast-fall.
 	}
 
 
 	void FixedUpdate() {
-		if (isGrounded) jumpsUsed = 0;  // Resets the number of jumps performed when touching the ground.
+		if (isGrounded) {
+			jumpsUsed = 0;  // Resets the number of jumps performed when touching the ground.
+			isFastFalling = false; // Deactivates the fast-fall.
+		}
 
 		if (horizontalMove != 0) {  // If the player is moving.
 			if (isGrounded) {  // If the player is on the ground.
@@ -83,7 +89,8 @@ public class Character_script : MonoBehaviour {
 			}
 		}
 		
-		if (rb.velocity.y < 0) {  // Limits the maximum speed of the player when falling down.
+		if (isFastFalling) rb.velocity = new Vector2(rb.velocity.x, fastFallSpeed);  // Apply fast-fall speed.
+		else if (rb.velocity.y < 0) {  // Limits the maximum speed of the player when falling down.
 			float y =  Mathf.Clamp(rb.velocity.y, maxFallSpeed, 0f);
 			rb.velocity = new Vector2(rb.velocity.x, y);
 		}
@@ -92,10 +99,12 @@ public class Character_script : MonoBehaviour {
 
 	void Jump (int jumpType) {  // A standard Jump.
 		jumpsUsed++;
-		isGrounded = false;
-		rb.velocity = new Vector2(rb.velocity.x, 0f);
+		isGrounded = false;  // Manually set var to false to prevent random triple jump bug.
+		isFastFalling = false;  // Jumping cancles fast-falls
+		rb.velocity = new Vector2(rb.velocity.x, 0f);  // Reset y velocity to have consistent jump height.
+		// Select the jump height depending on the type of jumps performed.
 		float jumpHeight = new float[] {fullHopHeight, shortHopHeight, doubleJumpHeight}[jumpType];
-		rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
+		rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);  // The actual jump.
 	}
 
 
