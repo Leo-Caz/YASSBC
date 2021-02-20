@@ -65,7 +65,7 @@ public class Character_script : MonoBehaviour {
 			Physics2D.IgnoreLayerCollision(10, 9, false);  // Reactivate collisions when out of platform.
 		}
 		
-		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.C)) isFastFalling = true;  // Perform a fast-fall.
+		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.X)) isFastFalling = true;  // Perform a fast-fall.
 	}
 
 
