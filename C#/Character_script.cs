@@ -150,7 +150,7 @@ public class Character_script : MonoBehaviour {
 		jumpsUsed++;
 		isGrounded = false;  // Manually set var to false to prevent random triple jump bug.
 		isFastFalling = false;  // Jumping cancles fast-falls
-		rb.velocity = new Vector2(rb.velocity.x, 0f);  // Reset y velocity to have consistent jump height.
+		rb.velocity = new Vector2(airSpeed *horizontalMove, 0f);  // Reset y velocity to have consistent jump height.
 		// Select the jump height depending on the type of jumps performed.
 		float jumpHeight = new float[] {fullHopHeight, shortHopHeight, doubleJumpHeight}[jumpType];
 		rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);  // The actual jump.
