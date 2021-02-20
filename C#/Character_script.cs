@@ -18,9 +18,9 @@ public class Character_script : MonoBehaviour {
 	public float airAccel = 14.5f;        // Acceleration when moving in the air.
 	public float airSpeed = 7.75f;        // Maximum speed in the air.
 	public float normalDrag = 2.6f;       // Value of the regular linear drag.
-	public float airDodgeDrag = 2.6f;     // Value of the linear drag during an air dodge.
-	public float airDodgeDist = 0f;       // Distance of the air dodge.
-	public float gravity = 0f;            // Gravity of the character.
+	public float airDodgeDrag = 6.5f;     // Value of the linear drag during an air dodge.
+	public float airDodgeDist = 11f;      // Distance of the air dodge.
+	public float gravity = 4.3f;          // Gravity of the character.
 
 	public bool isGrounded = false;       // Determines if the player is touching the ground.
 	public bool insidePlateform = false;  // Determines if the player is inside a platform when going through.
@@ -59,6 +59,16 @@ public class Character_script : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown(KeyCode.N) && !isGrounded) isAirDodging = true;
+		if (Input.GetKeyDown(KeyCode.C) && isGrounded) {  // Macro for a wavedash to the right.
+			isAirDodging = true;
+			horizontalMove = 1f;
+			verticalMove = -1f;
+		}
+		if (Input.GetKeyDown(KeyCode.Z) && isGrounded) {  // Macro for a wave dash to the left.
+			isAirDodging = true;
+			horizontalMove = -1f;
+			verticalMove = -1f;
+		}
 
 		if (Input.GetKeyDown(KeyCode.X)) Physics2D.IgnoreLayerCollision(10, 9);  // Go through platforms.
 		else if (!insidePlateform) {
@@ -70,22 +80,11 @@ public class Character_script : MonoBehaviour {
 
 
 	void FixedUpdate() {
-		if (isGrounded) {
-			jumpsUsed = 0;  // Resets the number of jumps performed when touching the ground.
-			isFastFalling = false; // Deactivates the fast-fall.
-			ableToAirDodge = true;
-			if (isAirDodging) {
-				isAirDodging = false;  // Cancles the air dodge when landing to allow for combos.
-				rb.gravityScale = gravity;  // Reactivate gravity.
-				rb.drag = normalDrag;  // Set the linear drag to the regular value.
-			}
-		}
-
+		// When performing an air dodge.
 		if (isAirDodging) {
 			if (ableToAirDodge) {
 				ableToAirDodge = false;
 				// Deactivate hurbox
-
 				if (Abs(horizontalMove) >= 0.1f || Abs(verticalMove) >= 0.1f) {
 					rb.velocity = new Vector2(0f, 0f);
 					dirAirDodge = true;
@@ -113,6 +112,7 @@ public class Character_script : MonoBehaviour {
 
 		else {
 			if (horizontalMove != 0) {  // If the player is moving.
+				// Ground movement.
 				if (isGrounded) {  // If the player is on the ground.
 					if (isWalking) {  // Physics when walking.
 						rb.velocity = new Vector2(horizontalMove * walkSpeed, rb.velocity.y);
@@ -124,10 +124,11 @@ public class Character_script : MonoBehaviour {
 						}
 						else {  // will slow down naturaly due to the friction and keep the player at running speed.
 							float x =  Mathf.Clamp(Abs(rb.velocity.x), runSpeed, dashSpeed);
-							rb.velocity = new Vector2(x * horizontalMove, rb.velocity.y);
+							rb.velocity = new Vector2(x * horizontalMove, 0f);
 						}
 					}
 				}
+				// Air movement.
 				else {  // If the player is in the air.
 					// Slowly accelerate when in the air.
 					rb.AddForce (new Vector2(horizontalMove * airAccel, rb.velocity.y), ForceMode2D.Force);
@@ -137,10 +138,24 @@ public class Character_script : MonoBehaviour {
 				}
 			}
 			
+			// Fast falling.
 			if (isFastFalling) rb.velocity = new Vector2(rb.velocity.x, fastFallSpeed);  // Apply fast-fall speed.
 			else if (rb.velocity.y < 0) {  // Limits the maximum speed of the player when falling down.
 				float y =  Mathf.Clamp(rb.velocity.y, maxFallSpeed, 0f);
 				rb.velocity = new Vector2(rb.velocity.x, y);
+			}
+		}
+		
+		// When touching the ground.
+		if (isGrounded) {
+			jumpsUsed = 0;  // Resets the number of jumps performed when touching the ground.
+			isFastFalling = false; // Deactivates the fast-fall.
+			ableToAirDodge = true;
+			if (isAirDodging) {
+				isAirDodging = false;  // Cancles the air dodge when landing to allow for combos.
+				rb.gravityScale = gravity;  // Reactivate gravity.
+				rb.drag = normalDrag;  // Set the linear drag to the regular value.
+				rb.velocity = new Vector2 ((Abs(rb.velocity.x) + Abs(rb.velocity.y)) *horizontalMove, 0f);
 			}
 		}
 	}
