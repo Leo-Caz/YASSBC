@@ -29,7 +29,7 @@ public class Character_script : MonoBehaviour {
 	private float horizontalMove = 0f;	  // Position of the analog stick x-axis (between -1 and +1).
 	private float verticalMove = 0f;	  // Position of the analog stick y-axis (between -1 and +1).
 	private bool ableToDash = true;       // Determines if the player does the initial dash when running.
-	private bool isWalking = false;       // Determines if normal atk button will do smashs or tilts, and if player will walk or run.
+	private bool isWalking = false;       // If set to true, the player will walk intead of run.
 	private int jumpsUsed = 0;            // Number of jumps performed before touching the ground.
 	private bool isAirDodging = false;    // Determines if the player is in air dodge state.
 	private bool ableToAirDodge = true;   // Determines if the player is able to perform an air dodge.
@@ -44,28 +44,34 @@ public class Character_script : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		// Analog stick position
 		horizontalMove = Input.GetAxisRaw("Horizontal");  // Gets position of analog stick on x-axis
 		verticalMove = Input.GetAxisRaw("Vertical");  // Gets position of analog stick on x-axis
 
-		// When smash mode is activated, you walk instead of dash, and do smash attacks instead of tilts.
+		if (Abs(horizontalMove) <= 0.1f) ableToDash = true;
+
+		// Walking
 		if (Input.GetKeyDown(KeyCode.LeftShift)) isWalking = true;
 		else if (Input.GetKeyUp(KeyCode.LeftShift)) isWalking = false;
 
-		// Calls the Jump function when spacebar is pressed and you still have jumps left.
+		// Jumping.
 		if ((Input.GetKeyDown(KeyCode.Space)) && (jumpsUsed < maxNbJumps)) {
 			if (isGrounded && !isWalking) Jump(0);      // Perform a standard jump.
 			else if (isGrounded && isWalking) Jump(1);  // Perform a short jump.
 			else if (!isGrounded) Jump(2);              // Perform a double jump.
 		}
 
+		// Airdodging.
 		if (Input.GetKeyDown(KeyCode.N) && !isGrounded) isAirDodging = true;
 
-		if (Input.GetKeyDown(KeyCode.X)) Physics2D.IgnoreLayerCollision(10, 9);  // Go through platforms.
+		// Dropping of the plateform.
+		if (Input.GetKeyDown(KeyCode.X)) Physics2D.IgnoreLayerCollision(10, 9);  // Deactivate collisions with plateforms.
 		else if (!insidePlateform) {
 			Physics2D.IgnoreLayerCollision(10, 9, false);  // Reactivate collisions when out of platform.
 		}
 		
-		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.X)) isFastFalling = true;  // Perform a fast-fall.
+		// Fast-fall.
+		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.X)) isFastFalling = true;
 	}
 
 
@@ -113,6 +119,7 @@ public class Character_script : MonoBehaviour {
 
 		else {
 			if (horizontalMove != 0) {  // If the player is moving.
+				Debug.Log(rb.velocity.x);
 				if (isGrounded) {  // If the player is on the ground.
 					if (isWalking) {  // Physics when walking.
 						rb.velocity = new Vector2(horizontalMove * walkSpeed, rb.velocity.y);
