@@ -25,13 +25,13 @@ public class Character_script : MonoBehaviour {
 	public bool isGrounded = false;       // Determines if the player is touching the ground.
 	public bool insidePlateform = false;  // Determines if the player is inside a platform when going through.
 	public bool isFastFalling = false;    // Determines if the player performes a fast-fall or not.
+	public bool isAirDodging = false;    // Determines if the player is in air dodge state.
 
 	private float horizontalMove = 0f;	  // Position of the analog stick x-axis (between -1 and +1).
 	private float verticalMove = 0f;	  // Position of the analog stick y-axis (between -1 and +1).
 	private bool ableToDash = true;       // Determines if the player does the initial dash when running.
 	private bool isWalking = false;       // Determines if normal atk button will do smashs or tilts, and if player will walk or run.
 	private int jumpsUsed = 0;            // Number of jumps performed before touching the ground.
-	private bool isAirDodging = false;    // Determines if the player is in air dodge state.
 	private bool ableToAirDodge = true;   // Determines if the player is able to perform an air dodge.
 	private bool dirAirDodge = false;     // Determines if the player performed a directional AD or a normal one.
 
@@ -99,14 +99,9 @@ public class Character_script : MonoBehaviour {
 			
 			// Cancle everything when total velocity is too low.
 			float speed = Mathf.Sqrt(Mathf.Pow(rb.velocity.x, 2) + Mathf.Pow(rb.velocity.y, 2));
-			if (dirAirDodge && speed <= 0.3f) {
+			if (dirAirDodge && speed <= 0.6f) {
 				rb.gravityScale = gravity;
 				rb.drag = normalDrag;
-				isAirDodging = false;
-			}
-
-			else if (!dirAirDodge && rb.velocity.y <= -3f) {  // Replace velocity check with timer.
-				isAirDodging = false;
 			}
 		}
 
