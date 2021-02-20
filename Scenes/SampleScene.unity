@@ -154,8 +154,13 @@ MonoBehaviour:
   fastFallSpeed: -14.5
   airAccel: 14.5
   airSpeed: 7.75
+  normalDrag: 2.6
+  airDodgeDrag: 2.6
+  airDodgeDist: 50
+  gravity: 4.3
   isGrounded: 0
   insidePlateform: 0
+  isFastFalling: 0
 --- !u!61 &413601823
 BoxCollider2D:
   m_ObjectHideFlags: 0
