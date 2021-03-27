@@ -7,6 +7,7 @@ public class Character_script : MonoBehaviour {
 	private Rigidbody2D rb;  // rb is used to enable and control the physics of the character.
 
 	public float dashSpeed = 16f;         // Speed of the initial dash.
+	public float runAccel = 4f;           // Acceleration at the start of a run.
 	public float runSpeed  = 9.5f;        // Movement speed when running (not the initial dash)
 	public float walkSpeed = 4.5f;        // Maximum movement speed when walking.
 	public float fullHopHeight = 25f;     // Height of the normal jump.
@@ -48,11 +49,17 @@ public class Character_script : MonoBehaviour {
 		horizontalMove = Input.GetAxisRaw("Horizontal");  // Gets position of analog stick on x-axis
 		verticalMove = Input.GetAxisRaw("Vertical");  // Gets position of analog stick on x-axis
 
-		if (Abs(horizontalMove) <= 0.1f) ableToDash = true;
+		if (Abs(horizontalMove) <= 0.1f) {
+			ableToDash = true;
+		}
 
 		// Walking
-		if (Input.GetKeyDown(KeyCode.LeftShift)) isWalking = true;
-		else if (Input.GetKeyUp(KeyCode.LeftShift)) isWalking = false;
+		if (Input.GetKeyDown(KeyCode.LeftShift)) {
+			isWalking = true;
+		}
+		else if (Input.GetKeyUp(KeyCode.LeftShift)) {
+			isWalking = false;
+		}
 
 		// Jumping.
 		if ((Input.GetKeyDown(KeyCode.Space)) && (jumpsUsed < maxNbJumps)) {
@@ -62,16 +69,22 @@ public class Character_script : MonoBehaviour {
 		}
 
 		// Airdodging.
-		if (Input.GetKeyDown(KeyCode.N) && !isGrounded) isAirDodging = true;
+		if (Input.GetKeyDown(KeyCode.N) && !isGrounded) {
+			isAirDodging = true;
+		}
 
 		// Dropping of the plateform.
-		if (Input.GetKeyDown(KeyCode.X)) Physics2D.IgnoreLayerCollision(10, 9);  // Deactivate collisions with plateforms.
+		if (Input.GetKeyDown(KeyCode.X)) {
+			Physics2D.IgnoreLayerCollision(10, 9);  // Deactivate collisions with plateforms.
+		}
 		else if (!insidePlateform) {
 			Physics2D.IgnoreLayerCollision(10, 9, false);  // Reactivate collisions when out of platform.
 		}
 		
 		// Fast-fall.
-		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.X)) isFastFalling = true;
+		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.X)) {
+			isFastFalling = true;
+		}
 	}
 
 
@@ -102,6 +115,7 @@ public class Character_script : MonoBehaviour {
 								Mathf.Sin(angle) *verticalMove *airDodgeDist), ForceMode2D.Impulse);
 					rb.drag = airDodgeDrag;
 				}
+
 			}
 			
 			// Cancle everything when total velocity is too low.
@@ -118,24 +132,26 @@ public class Character_script : MonoBehaviour {
 		}
 
 		else {
-			if (horizontalMove != 0) {  // If the player is moving.
-				Debug.Log(rb.velocity.x);
+			if (horizontalMove != 0) {
+				// Ground movement.
 				if (isGrounded) {  // If the player is on the ground.
 					if (isWalking) {  // Physics when walking.
 						rb.velocity = new Vector2(horizontalMove * walkSpeed, rb.velocity.y);
 					}
+
 					else {  // Physics when running.
 						if (ableToDash) {  // Performs a dash at the start of the run.
-							rb.AddForce (new Vector2(dashSpeed * horizontalMove, 0f), ForceMode2D.Impulse);
+							rb.velocity = new Vector2(dashSpeed * horizontalMove, 0f);
 							ableToDash = false;
 						}
 						else {  // will slow down naturaly due to the friction and keep the player at running speed.
 							float x =  Mathf.Clamp(Abs(rb.velocity.x), runSpeed, dashSpeed);
-							rb.velocity = new Vector2(x * horizontalMove, rb.velocity.y);
+							rb.velocity = new Vector2(x * horizontalMove, 0f);
 						}
 					}
 				}
-				else {  // If the player is in the air.
+				// Air movement.
+				else { 
 					// Slowly accelerate when in the air.
 					rb.AddForce (new Vector2(horizontalMove * airAccel, rb.velocity.y), ForceMode2D.Force);
 					// Speed will not go faster than the value airSpeed variable.
@@ -143,12 +159,8 @@ public class Character_script : MonoBehaviour {
 					rb.velocity = new Vector2(x, rb.velocity.y);
 				}
 			}
-			
-			if (isFastFalling) rb.velocity = new Vector2(rb.velocity.x, fastFallSpeed);  // Apply fast-fall speed.
-			else if (rb.velocity.y < 0) {  // Limits the maximum speed of the player when falling down.
-				float y =  Mathf.Clamp(rb.velocity.y, maxFallSpeed, 0f);
-				rb.velocity = new Vector2(rb.velocity.x, y);
-			}
+
+			if (isFastFalling) rb.velocity = new Vector2(rb.velocity.x, fastFallSpeed);  // Apply constant fast-fall speed.
 		}
 	}
 
