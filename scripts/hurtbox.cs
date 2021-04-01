@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hurtbox_script : MonoBehaviour {
+public class hurtbox : MonoBehaviour {
 
 	public GameObject character;
-	private Character_script character_script;
+	private character character_script;
 
 	void Awake() {
-		character_script = character.GetComponent<Character_script>();
+		character_script = character.GetComponent<character>();
 	}
 
 	void OnTriggerEnter2D (Collider2D collider) {

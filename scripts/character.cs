@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character_script : MonoBehaviour {
+public class character : MonoBehaviour {
 
 	private Rigidbody2D rb;  // rb is used to enable and control the physics of the character.
 

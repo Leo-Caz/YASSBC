@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ground_check : MonoBehaviour {
+public class ground_check : MonoBehaviour {
 
 	public GameObject character;
-	private Character_script character_script;
+	private character character_script;
 	private Rigidbody2D rb;
 
 	void Awake() {
-		character_script = character.GetComponent<Character_script>();
+		character_script = character.GetComponent<character>();
 		rb = character.GetComponent<Rigidbody2D>();
 	}
 
