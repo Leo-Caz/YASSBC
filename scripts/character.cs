@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class character : MonoBehaviour {
 
+	public GameObject lightAttack;
+	public GameObject heavyAttack;
+	public GameObject airAttack;
+	public Transform firePoint;
+	public GameObject firePillar;
+	public GameObject fireBirb;
+
 	private Rigidbody2D rb;  // rb is used to enable and control the physics of the character.
 
 	public float dashSpeed = 16f;         // Speed of the initial dash.
@@ -84,6 +91,46 @@ public class character : MonoBehaviour {
 		// Fast-fall.
 		if (rb.velocity.y < 0.5f && Input.GetKeyDown(KeyCode.X)) {
 			isFastFalling = true;
+		}
+
+
+		if (Input.GetKeyDown(KeyCode.L)) {
+			if (isGrounded) {
+				lightAttack.GetComponent<BoxCollider2D>().enabled  = true;
+				lightAttack.GetComponent<SpriteRenderer>().enabled = true;
+			}
+			else {
+				airAttack.GetComponent<BoxCollider2D>().enabled  = true;
+				airAttack.GetComponent<SpriteRenderer>().enabled = true;
+			}
+		}
+		else if (Input.GetKeyUp(KeyCode.L)) {
+			if (isGrounded) {
+				lightAttack.GetComponent<BoxCollider2D>().enabled  = false;
+				lightAttack.GetComponent<SpriteRenderer>().enabled = false;
+			}
+			else {
+				airAttack.GetComponent<BoxCollider2D>().enabled  = false;
+				airAttack.GetComponent<SpriteRenderer>().enabled = false;
+			}
+		}
+
+		if (Input.GetKeyDown(KeyCode.F)) {
+			heavyAttack.GetComponent<BoxCollider2D>().enabled = true;
+			heavyAttack.GetComponent<SpriteRenderer>().enabled = true;
+		}
+		else if (Input.GetKeyUp(KeyCode.F)) {
+			heavyAttack.GetComponent<BoxCollider2D>().enabled = false;
+			heavyAttack.GetComponent<SpriteRenderer>().enabled = false;
+		}
+
+		if (Input.GetKeyDown(KeyCode.R)) {
+			if (isGrounded) {
+				Instantiate(firePillar, firePoint.position, firePoint.rotation);
+			}
+			else {
+				Instantiate(fireBirb, firePoint.position, firePoint.rotation);
+			}
 		}
 	}
 
